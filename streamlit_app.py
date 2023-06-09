@@ -21,25 +21,25 @@ def summarize_text(text):
 
     docs = [Document(page_content=t) for t in texts]
 
-    prompt_template = """Write a concise summary of the following in Japanese:
+    prompt_template = """下記の文章を簡潔に日本語で要約してください。:
 
 
     {text}
 
 
-    CONCISE SUMMARY IN JAPANESE:"""
+    簡潔な要約:"""
 
     PROMPT = PromptTemplate(template=prompt_template, input_variables=["text"])
     refine_template = (
-        "Your job is to produce a final summary\n"
-        "We have provided an existing summary up to a certain point: {existing_answer}\n"
-        "We have the opportunity to refine the existing summary"
-        "(only if needed) with some more context below.\n"
+        "あなたの役割は最終的な要約文を作成することです\n"
+        "私はすでに要約したポイントを提示します。: {existing_answer}\n"
+        "すでに存在する要約と合わせて、新しい要約を生成してください。"
+        "(もし必要であれば) 以下の文章を使用してください.\n"
         "------------\n"
         "{text}\n"
         "------------\n"
-        "Given the new context, refine the original summary in Japanese"
-        "If the context isn't useful, return the original summary."
+        "新しい文脈を提供するので, 元々の要約文を再生成してください。"
+        "もし提供された新しい文脈が不要な場合は, 元々の要約文を回答してください."
     )
     refine_prompt = PromptTemplate(
         input_variables=["existing_answer", "text"],
