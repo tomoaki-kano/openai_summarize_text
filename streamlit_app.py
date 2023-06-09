@@ -9,7 +9,7 @@ from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
 
 
-def summarize_text(text):
+def summarize_text(text, prompt_template, refine_template):
 
     llm = OpenAI(temperature=0)
 
@@ -21,30 +21,12 @@ def summarize_text(text):
 
     docs = [Document(page_content=t) for t in texts]
 
-    prompt_template = """下記の文章を簡潔に日本語で要約してください。:
-
-
-    {text}
-
-
-    簡潔な要約:"""
-
     PROMPT = PromptTemplate(template=prompt_template, input_variables=["text"])
-    refine_template = (
-        "あなたの役割は最終的な要約文を作成することです\n"
-        "私はすでに要約したポイントを提示します: {existing_answer}\n"
-        "すでに存在する要約と合わせて、新しい要約を生成してください"
-        "(もし必要であれば) 以下の文章を要約文に含めてください\n"
-        "------------\n"
-        "{text}\n"
-        "------------\n"
-        "新しい文脈を提供するので, 元々の要約文を再生成してください"
-        "もし提供された新しい文脈が不要な場合は, 元々の要約文を回答してください"
-    )
     refine_prompt = PromptTemplate(
         input_variables=["existing_answer", "text"],
         template=refine_template,
     )
+
     chain = load_summarize_chain(OpenAI(temperature=0), chain_type="refine", return_intermediate_steps=True, question_prompt=PROMPT, refine_prompt=refine_prompt)
     chain({"input_documents": docs}, return_only_outputs=True)
 
