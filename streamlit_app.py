@@ -32,14 +32,14 @@ def summarize_text(text):
     PROMPT = PromptTemplate(template=prompt_template, input_variables=["text"])
     refine_template = (
         "あなたの役割は最終的な要約文を作成することです\n"
-        "私はすでに要約したポイントを提示します。: {existing_answer}\n"
-        "すでに存在する要約と合わせて、新しい要約を生成してください。"
-        "(もし必要であれば) 以下の文章を使用してください.\n"
+        "私はすでに要約したポイントを提示します: {existing_answer}\n"
+        "すでに存在する要約と合わせて、新しい要約を生成してください"
+        "(もし必要であれば) 以下の文章を要約文に含めてください\n"
         "------------\n"
         "{text}\n"
         "------------\n"
-        "新しい文脈を提供するので, 元々の要約文を再生成してください。"
-        "もし提供された新しい文脈が不要な場合は, 元々の要約文を回答してください."
+        "新しい文脈を提供するので, 元々の要約文を再生成してください"
+        "もし提供された新しい文脈が不要な場合は, 元々の要約文を回答してください"
     )
     refine_prompt = PromptTemplate(
         input_variables=["existing_answer", "text"],
@@ -54,7 +54,32 @@ def summarize_text(text):
 
 
 # テキストボックスを作成
-input_text = st.text_input('要約したい文章を入力してください。')
+input_text = st.text_area('要約したい文章を入力してください。')
+
+st.text("prompt_template")
+
+prompt_template = st.text_area(
+    """下記の文章を簡潔に日本語で要約してください。:
+
+
+{text}
+
+
+簡潔な要約:"""
+)
+
+refine_template = st.text_area(
+    """あなたの役割は最終的な要約文を作成することです
+私はすでに要約したポイントを提示します: {existing_answer}
+すでに存在する要約と合わせて、新しい要約を生成してください
+(もし必要であれば) 以下の文章を要約文に含めてください
+------------
+{text}
+------------
+新しい文脈を提供するので, 元々の要約文を再生成してください
+もし提供された新しい文脈が不要な場合は, 元々の要約文を回答してください
+"""
+)
 
 # ボタンを作成
 button_clicked = st.button('要約')
