@@ -21,7 +21,7 @@ def summarize_text(text):
 
     docs = [Document(page_content=t) for t in texts]
 
-    prompt_template = """Write a concise summary of the following:
+    prompt_template = """Write a concise summary of the following in Japanese:
 
 
     {text}
@@ -57,7 +57,7 @@ def summarize_text(text):
 input_text = st.text_input('要約したい文章を入力してください。')
 
 # ボタンを作成
-button_clicked = st.button('表示')
+button_clicked = st.button('要約')
 
 
 # ボタンがクリックされたらテキストを表示
