@@ -1,5 +1,6 @@
 import streamlit as st
 
+import langchain
 from langchain import OpenAI, PromptTemplate, LLMChain
 from langchain.text_splitter import CharacterTextSplitter,RecursiveCharacterTextSplitter
 from langchain.chains.mapreduce import MapReduceChain
