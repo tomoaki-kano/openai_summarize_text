@@ -68,4 +68,4 @@ button_clicked = st.button('要約')
 
 # ボタンがクリックされたらテキストを表示
 if button_clicked:
-    st.write(summarize_text(input_text))
+    st.write(summarize_text(input_text, prompt_template, refine_template))
