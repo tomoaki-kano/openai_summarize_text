@@ -11,7 +11,10 @@ from langchain.docstore.document import Document
 
 def summarize_text(text, prompt_template, refine_template):
 
-    llm = OpenAI(temperature=0)
+    llm = OpenAI(
+        model_name="gpt-4",
+        temperature=0
+    )
 
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=2500
