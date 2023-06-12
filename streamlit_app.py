@@ -12,8 +12,9 @@ from langchain.chat_models import ChatOpenAI
 
 def summarize_text(text, prompt_template, refine_template):
 
-    llm = ChatOpenAI(
-        model_name="gpt-4",
+#    llm = ChatOpenAI(
+    llm = OpenAI(
+#        model_name="gpt-4",
         temperature=0
     )
 
@@ -55,7 +56,7 @@ prompt_template = st.text_area(
 
 refine_template = st.text_area(
     "refine_template",
-    value = """あなたの役割は最終的な要約文を作成することです
+    value = """あなたの役割は最終的な日本語の要約文を作成することです
 私はすでに要約したポイントを提示します: {existing_answer}
 すでに存在する要約と合わせて、新しい要約を生成してください
 (もし必要であれば) 以下の文章を要約文に含めてください
