@@ -12,9 +12,7 @@ from langchain.chat_models import ChatOpenAI
 
 def summarize_text(text, prompt_template, refine_template):
 
-#    llm = ChatOpenAI(
     llm = OpenAI(
-#        model_name="gpt-4",
         temperature=0
     )
 
