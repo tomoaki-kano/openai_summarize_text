@@ -7,11 +7,12 @@ from langchain.chains.mapreduce import MapReduceChain
 from langchain.prompts import PromptTemplate
 from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
+from kangchain.chat_models import OpenAIChat
 
 
 def summarize_text(text, prompt_template, refine_template):
 
-    llm = OpenAI(
+    llm = OpenAIChat(
         model_name="gpt-4",
         temperature=0
     )
