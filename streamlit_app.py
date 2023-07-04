@@ -1,74 +1,31 @@
 import streamlit as st
 
 import langchain
-from langchain import OpenAI, PromptTemplate, LLMChain
-from langchain.text_splitter import CharacterTextSplitter,RecursiveCharacterTextSplitter
-from langchain.chains.mapreduce import MapReduceChain
-from langchain.prompts import PromptTemplate
-from langchain.chains.summarize import load_summarize_chain
-from langchain.docstore.document import Document
-from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 
 
-def summarize_text(text, prompt_template, refine_template):
+def summarize_text(text, prompt):
 
     llm = OpenAI(
-        temperature=0
+        model_name="gpt-4-0613",
+        temperature=0,
+        max_tokens=-1,
     )
 
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=2500
-    )
+    prompt = f'''
+    以下の文章を日本語で簡潔に要約してください
 
-    texts = text_splitter.split_text(text)
+    {text}
+    '''
 
-    docs = [Document(page_content=t) for t in texts]
-
-    PROMPT = PromptTemplate(template=prompt_template, input_variables=["text"])
-    refine_prompt = PromptTemplate(
-        input_variables=["existing_answer", "text"],
-        template=refine_template,
-    )
-
-    chain = load_summarize_chain(OpenAI(temperature=0), chain_type="refine", return_intermediate_steps=True, question_prompt=PROMPT, refine_prompt=refine_prompt)
-    chain({"input_documents": docs}, return_only_outputs=True)
-
-    chain = load_summarize_chain(llm, chain_type="refine")
-
-    return chain.run(docs)
-
+    return llm(prompt)
 
 # テキストボックスを作成
 input_text = st.text_area('要約したい文章を入力してください。')
 
-prompt_template = st.text_area(
-    "prompt_template",
-    value = """下記の文章を簡潔に日本語で要約してください。:
-
-
-{text}
-
-
-簡潔な要約:"""
-)
-
-refine_template = st.text_area(
-    "refine_template",
-    value = """あなたの役割は最終的な日本語の要約文を作成することです
-私はすでに要約したポイントを提示します: {existing_answer}
-すでに存在する要約と合わせて、新しい要約を生成してください
-(もし必要であれば) 以下の文章を要約文に含めてください
-------------
-{text}
-------------
-新しい文脈を提供するので, 元々の要約文を再生成してください
-もし提供された新しい文脈が不要な場合は, 元々の要約文を回答してください"""
-)
-
 # ボタンを作成
 button_clicked = st.button('要約')
 
-
 # ボタンがクリックされたらテキストを表示
 if button_clicked:
-    st.write(summarize_text(input_text, prompt_template, refine_template))
+    st.write(summarize_text(input_text))
